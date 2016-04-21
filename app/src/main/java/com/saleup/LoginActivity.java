@@ -65,24 +65,60 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-/*
-        ServerCall.initSomeProcess(new Runnable() {
-            @Override
-            public void run() {
-                int i = 0;
-            }
-        });*/
     }
 
     public void login() {
         Log.d(TAG, "Login");
 
+        if (!validate()) {
+            onLoginFailed();
+            return;
+        }
+
+        _loginButton.setEnabled(false);
+
+        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Authenticating...");
+        progressDialog.show();
 
         final String phone = _phoneText.getText().toString();
 
+        new MyThread(
+                new OnRunMe(){public boolean run(){
+                    try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+
+                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/User/BeginAuthentication");
+
+                        post.addHeader("Content-type", "application/x-www-form-urlencoded");
+                        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+                        urlParameters.add(new BasicNameValuePair("PhoneNumber", phone));
+
+                        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+                        /*
+                        HttpResponse responseGet = httpClient.execute(post);
+
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(responseGet.getEntity().getContent(), "UTF-8"));
+                        String json = reader.readLine();
+                        */
+                        int i = 0;
+                        return  true;
+
+                    } catch (IOException e) {
+                        return false;
+                    }
+                }},
+                new OnCallback(){public void callback(){
+                    onLoginSuccess();
+                }},
+                new OnCallback(){public void callback(){
+                    onLoginFailed();
+                    progressDialog.dismiss();
+                }}
+        ).run();
+
+        /*
         Thread thread = new Thread(new Runnable()
         {
             @Override
@@ -91,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
 
-                    HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/User/BeginRegistration");
+                    HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/User/BeginAuthentication");
                     /*
                     get.setHeader("Accept", "application/json");
                     //get.setHeader("X-Api-Key", apiKey);
@@ -105,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-                    
+/*
                     post.addHeader("Content-type", "application/x-www-form-urlencoded");
                     List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
                     urlParameters.add(new BasicNameValuePair("PhoneNumber", phone));
@@ -125,7 +161,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        thread.start();
+        thread.start();*/
 
 
 
@@ -198,7 +234,7 @@ public class LoginActivity extends AppCompatActivity {
         String email = _phoneText.getText().toString();
 
         if (email.isEmpty() ) {
-            _phoneText.setError("enter a valid email address");
+            _phoneText.setError("enter a valid phone number");
             valid = false;
         } else {
             _phoneText.setError(null);
