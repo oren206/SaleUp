@@ -9,26 +9,20 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name" />
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
-        <activity
-            android:name=".SignupActivity"
-            android:label="@string/title_activity_signup" />
-        <activity
-            android:name=".HomeActivity"
-            android:label="@string/title_activity_home" />
-        <activity android:name=".InitLoadActivity">
+        <activity android:name=".MainActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".SignupActivity" />
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".InitLoadActivity" />
+        <activity android:name=".VerifyActivity" />
+        <activity android:name=".SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".VerifyActivity"></activity>
     </application>
 
 </manifest>

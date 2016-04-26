@@ -99,6 +99,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         post.addHeader("Content-type", "application/x-www-form-urlencoded");
                         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+                        urlParameters.add(new BasicNameValuePair("DeviceId", ""));
                         urlParameters.add(new BasicNameValuePair("PhoneNumber", phone));
                         urlParameters.add(new BasicNameValuePair("Code", "0"));
 
@@ -135,6 +136,9 @@ public class LoginActivity extends AppCompatActivity {
                     LoginActivity.this.runOnUiThread(new Runnable() {
                         public void run() {
                             Object data = result.data;
+
+                            Cache.GetInstance().Set(LoginActivity.this, "PhoneNumber", phone);
+
                             onLoginSuccess();
                         }
                     });
