@@ -28,6 +28,10 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @InjectView(R.id.input_phone) EditText _phoneText;
     @InjectView(R.id.btn_login) Button _loginButton;
-    @InjectView(R.id.link_signup) TextView _signupLink;
+    //@InjectView(R.id.link_signup) TextView _signupLink;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        /*
         _signupLink.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -64,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_SIGNUP);
             }
         });
+        */
 
     }
 
@@ -84,89 +90,66 @@ public class LoginActivity extends AppCompatActivity {
 
         final String phone = _phoneText.getText().toString();
 
-        new MyThread(
-                new OnRunMe(){public boolean run(){
-                    try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+        new Thread(new MyThread(
+                new OnRunMe(){public Result run(){
+                    try  {
 
+                        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
                         HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/User/BeginAuthentication");
 
                         post.addHeader("Content-type", "application/x-www-form-urlencoded");
                         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
                         urlParameters.add(new BasicNameValuePair("PhoneNumber", phone));
+                        urlParameters.add(new BasicNameValuePair("Code", "0"));
 
                         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
-                        /*
+
                         HttpResponse responseGet = httpClient.execute(post);
 
                         BufferedReader reader = new BufferedReader(new InputStreamReader(responseGet.getEntity().getContent(), "UTF-8"));
                         String json = reader.readLine();
-                        */
-                        int i = 0;
-                        return  true;
+
+                        JSONTokener tokener = new JSONTokener(json);
+                        JSONObject finalResult = new JSONObject(tokener);
+
+                        httpClient.close();
+
+                        Result result = new Result();
+                        result.status = true;
+                        result.data = finalResult;
+                        return  result;
 
                     } catch (IOException e) {
-                        return false;
+                        Result result = new Result();
+                        result.status = false;
+                        return  result;
+                    }
+                    catch (JSONException e) {
+                        Result result = new Result();
+                        result.status = false;
+                        return  result;
                     }
                 }},
-                new OnCallback(){public void callback(){
-                    onLoginSuccess();
+                new OnCallback(){public void callback(final Result result){
+                    LoginActivity.this.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Object data = result.data;
+                            onLoginSuccess();
+                        }
+                    });
+
                 }},
-                new OnCallback(){public void callback(){
-                    onLoginFailed();
-                    progressDialog.dismiss();
+                new OnCallback(){public void callback(Result result){
+                    LoginActivity.this.runOnUiThread(new Runnable() {
+                        public void run() {
+                            onLoginFailed();
+                            progressDialog.dismiss();
+                        }
+                    });
+
                 }}
-        ).run();
-
-        /*
-        Thread thread = new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-
-                try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
-
-                    HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/User/BeginAuthentication");
-                    /*
-                    get.setHeader("Accept", "application/json");
-                    //get.setHeader("X-Api-Key", apiKey);
-                    StringEntity params =new StringEntity("details={\"name\":\"myname\"} ");
-                    get.addHeader("content-type", "application/x-www-form-urlencoded");
-                    get.setEntity(params);
-                    //get.setHeader("X-Api-Key", apiKey);
-                    */
-
-                    //post.setHeader("User-Agent", USER_AGENT);
-
-
-
-/*
-                    post.addHeader("Content-type", "application/x-www-form-urlencoded");
-                    List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-                    urlParameters.add(new BasicNameValuePair("PhoneNumber", phone));
-
-                    post.setEntity(new UrlEncodedFormEntity(urlParameters));
-
-                    HttpResponse responseGet = httpClient.execute(post);
-
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(responseGet.getEntity().getContent(), "UTF-8"));
-                    String json = reader.readLine();
-                    int i = 0;
-                } catch (IOException e) {
-
-                    // handle
-
-                }
-            }
-        });
-
-        thread.start();*/
-
-
-
-
-
+        )).start();
 
 /*
         if (!validate()) {
@@ -219,7 +202,9 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
-        finish();
+        //finish();
+        Intent k = new Intent(LoginActivity.this, VerifyActivity.class);
+        startActivity(k);
     }
 
     public void onLoginFailed() {

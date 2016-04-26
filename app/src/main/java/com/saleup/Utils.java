@@ -1,20 +1,24 @@
 package com.saleup;
 
+class Result{
+    boolean status;
+    Object data;
+}
 
 interface RunMe {
-    boolean run(); // would be in any signature
+    Result run(); // would be in any signature
 }
 
 class OnRunMe implements RunMe {
-    public boolean run(){return true;}
+    public Result run(){return null;}
 }
 
 interface Callback {
-    void callback(); // would be in any signature
+    void callback(Result result); // would be in any signature
 }
 
 class OnCallback implements Callback {
-    public void callback(){}
+    public void callback(Result result){}
 }
 
 class MyThread implements Runnable {
@@ -30,12 +34,12 @@ class MyThread implements Runnable {
     }
 
     public void run() {
-
-        if(this.onRun.run()){
-            this.onSuccess.callback();
+        Result result = this.onRun.run();
+        if(result.status){
+            this.onSuccess.callback(result);
         }
         else{
-            this.onFailed.callback();
+            this.onFailed.callback(result);
         }
 
     }
