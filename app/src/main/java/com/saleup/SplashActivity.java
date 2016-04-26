@@ -36,7 +36,7 @@ public class SplashActivity extends Activity {
 
                         post.addHeader("Content-type", "application/x-www-form-urlencoded");
                         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-                        urlParameters.add(new BasicNameValuePair("DeviceId", ""));
+                        urlParameters.add(new BasicNameValuePair("DeviceId", "abcd"));
 
                         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
@@ -74,6 +74,8 @@ public class SplashActivity extends Activity {
                                 JSONObject data = (JSONObject) result.data;
 
                                 if(data.getInt("ResultNumber") == 1){
+                                    Cache.GetInstance().Set(SplashActivity.this, "UserData", data.getString("Data"));
+
                                     Intent k = new Intent(SplashActivity.this, HomeActivity.class);
                                     startActivity(k);
                                     finish();

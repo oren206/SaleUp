@@ -14,7 +14,7 @@
         <activity android:name=".SignupActivity" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".InitLoadActivity" />
-        <activity android:name=".VerifyActivity" />
+        <activity android:name=".VerifyActivity" android:theme="@style/AppTheme" />
         <activity android:name=".SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>

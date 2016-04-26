@@ -76,7 +76,7 @@ public class VerifyActivity extends AppCompatActivity {
 
                         post.addHeader("Content-type", "application/x-www-form-urlencoded");
                         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-                        urlParameters.add(new BasicNameValuePair("DeviceId", ""));
+                        urlParameters.add(new BasicNameValuePair("DeviceId", "abcd"));
                         urlParameters.add(new BasicNameValuePair("PhoneNumber", phone));
                         urlParameters.add(new BasicNameValuePair("Code", code));
 

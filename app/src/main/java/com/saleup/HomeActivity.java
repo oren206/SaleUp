@@ -4,14 +4,40 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 
 public class HomeActivity extends ActionBarActivity {
 
+    @InjectView(R.id.lblUserName) TextView _userNameLabel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        ButterKnife.inject(this);
+
+        String user = (String) Cache.GetInstance().Get(HomeActivity.this, "UserData");
+        try {
+            JSONTokener tokener = new JSONTokener(user);
+            JSONObject finalResult = new JSONObject(tokener);
+
+            _userNameLabel.setText(finalResult.getString("UserName"));
+
+
+        }
+        catch (JSONException ex){
+
+        }
+
     }
 
     @Override
