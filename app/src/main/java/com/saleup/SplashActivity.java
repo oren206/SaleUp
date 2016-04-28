@@ -1,8 +1,11 @@
 package com.saleup;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.google.android.gms.iid.InstanceID;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -27,16 +30,26 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final Context con = this.getApplicationContext();
+
         new Thread(new MyThread(
                 new OnRunMe(){public Result run(){
                     try  {
+
+
+                        String token = "";
+                        try {
+                            token = InstanceID.getInstance(con).getToken("50089535523", "GCM");
+                        }
+                        catch (IOException ex){
+                        }
 
                         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
                         HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/User/CheckAuthentication");
 
                         post.addHeader("Content-type", "application/x-www-form-urlencoded");
                         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-                        urlParameters.add(new BasicNameValuePair("DeviceId", "abcd"));
+                        urlParameters.add(new BasicNameValuePair("DeviceId", token));
 
                         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
@@ -54,6 +67,9 @@ public class SplashActivity extends Activity {
                         Result result = new Result();
                         result.status = true;
                         result.data = finalResult;
+
+
+
                         return  result;
 
                     } catch (IOException e) {

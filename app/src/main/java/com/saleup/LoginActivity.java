@@ -1,5 +1,7 @@
 package com.saleup;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +38,8 @@ import org.json.JSONTokener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
+import com.google.android.gms.iid.InstanceID;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -88,18 +92,26 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
 
+        final Context con = this.getApplicationContext();
         final String phone = _phoneText.getText().toString();
 
         new Thread(new MyThread(
                 new OnRunMe(){public Result run(){
                     try  {
 
+                        String token = "";
+                        try {
+                            token = InstanceID.getInstance(con).getToken("50089535523", "GCM");
+                        }
+                        catch (IOException ex){
+                        }
+
                         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
                         HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/User/BeginAuthentication");
 
                         post.addHeader("Content-type", "application/x-www-form-urlencoded");
                         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-                        urlParameters.add(new BasicNameValuePair("DeviceId", "abcd"));
+                        urlParameters.add(new BasicNameValuePair("DeviceId", token));
                         urlParameters.add(new BasicNameValuePair("PhoneNumber", phone));
                         urlParameters.add(new BasicNameValuePair("Code", "0"));
 
