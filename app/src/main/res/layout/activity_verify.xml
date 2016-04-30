@@ -44,5 +44,12 @@
             android:text="Verify"
             android:id="@+id/btn_verify"
             android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="242dp"
+            android:layout_height="wrap_content"
+            android:text="Resend code"
+            android:id="@+id/btnResend"
+            android:layout_gravity="center_horizontal" />
     </LinearLayout>
 </RelativeLayout>

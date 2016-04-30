@@ -27,4 +27,12 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="58dp" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dissconnect"
+        android:id="@+id/btn_disconnect"
+        android:layout_below="@+id/btnNotify"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

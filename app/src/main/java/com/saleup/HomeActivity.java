@@ -1,6 +1,7 @@
 package com.saleup;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -37,6 +38,8 @@ public class HomeActivity extends ActionBarActivity {
 
     @InjectView(R.id.lblUserName) TextView _userNameLabel;
     @InjectView(R.id.btnNotify) Button _notifyButton;
+    @InjectView(R.id.btn_disconnect) Button _disconnectButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +51,14 @@ public class HomeActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 sendPush();
+            }
+        });
+
+        _disconnectButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                disconnect();
             }
         });
 
@@ -63,6 +74,100 @@ public class HomeActivity extends ActionBarActivity {
 
         }
 
+    }
+
+    public void disconnect(){
+        final ProgressDialog progressDialog = new ProgressDialog(HomeActivity.this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Disconnecting...");
+        progressDialog.show();
+
+        new Thread(new MyThread(
+                new OnRunMe(){public Result run(){
+                    try  {
+
+                        String token = "";
+                        String user = (String) Cache.GetInstance().Get(HomeActivity.this, "UserData");
+                        try {
+                            JSONTokener tokener = new JSONTokener(user);
+                            JSONObject finalResult = new JSONObject(tokener);
+
+                            token = finalResult.getString("DeviceId");
+
+
+                        }
+                        catch (JSONException ex){
+
+                        }
+
+                        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/User/DissconnectDevice");
+
+                        post.addHeader("Content-type", "application/x-www-form-urlencoded");
+                        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+                        urlParameters.add(new BasicNameValuePair("DeviceId", token));
+
+                        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+
+                        HttpResponse responseGet = httpClient.execute(post);
+
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(responseGet.getEntity().getContent(), "UTF-8"));
+                        String json = reader.readLine();
+
+                        JSONTokener tokener = new JSONTokener(json);
+                        JSONObject finalResult = new JSONObject(tokener);
+
+                        httpClient.close();
+
+                        Result result = new Result();
+                        result.status = true;
+                        result.data = finalResult;
+                        return  result;
+
+                    } catch (IOException e) {
+                        Result result = new Result();
+                        result.status = false;
+                        return  result;
+                    }
+                    catch (JSONException e) {
+                        Result result = new Result();
+                        result.status = false;
+                        return  result;
+                    }
+                }},
+                new OnCallback(){public void callback(final Result result){
+                    HomeActivity.this.runOnUiThread(new Runnable() {
+                        public void run() {
+                            try {
+                                JSONObject data = (JSONObject) result.data;
+
+                                if(data.getInt("ResultNumber") == 1){
+                                    Intent k = new Intent(HomeActivity.this, LoginActivity.class);
+                                    startActivity(k);
+                                }
+                                else{
+
+                                }
+
+                            }catch (JSONException ex){
+
+                            }
+                            progressDialog.dismiss();
+                        }
+                    });
+
+                }},
+                new OnCallback(){public void callback(Result result){
+                    HomeActivity.this.runOnUiThread(new Runnable() {
+                        public void run() {
+
+                            progressDialog.dismiss();
+                        }
+                    });
+
+                }}
+        )).start();
     }
 
     public void sendPush(){
