@@ -7,6 +7,7 @@
     <permission android:name="com.saleup.permission.C2D_MESSAGE" android:protectionLevel="signature" />
     <uses-permission android:name="com.saleup.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
 
 
     <application
