@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_camera"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Profile" />
+        <item
+            android:id="@+id/nav_gallery"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="My Sales" />
+        <item
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="My Offers" />
+        <item
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Hot Items" />
+        <item
+        android:id="@+id/nav_search"
+        android:icon="@drawable/ic_menu_manage"
+        android:title="Search" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="About" />
+    </group>
+
+    <item android:title="Communicate">
+        
+    </item>
+
+    <group android:checkableBehavior="single">
+    <item
+        android:id="@+id/nav_disconnect"
+        android:title="Disconnect" />
+    </group>
+
+
+</menu>

@@ -212,7 +212,9 @@ public class VerifyActivity extends AppCompatActivity {
                                 JSONObject data = (JSONObject) result.data;
 
                                 if(data.getInt("ResultNumber") == 1){
-                                    Intent k = new Intent(VerifyActivity.this, HomeActivity.class);
+                                    Cache.GetInstance().Set(VerifyActivity.this, "UserData", data.getString("Data"));
+
+                                    Intent k = new Intent(VerifyActivity.this, BaseActivity.class);
                                     startActivity(k);
                                 }
                                 else{

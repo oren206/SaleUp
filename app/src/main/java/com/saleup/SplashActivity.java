@@ -92,7 +92,7 @@ public class SplashActivity extends Activity {
                                 if(data.getInt("ResultNumber") == 1){
                                     Cache.GetInstance().Set(SplashActivity.this, "UserData", data.getString("Data"));
 
-                                    Intent k = new Intent(SplashActivity.this, HomeActivity.class);
+                                    Intent k = new Intent(SplashActivity.this, BaseActivity.class);
                                     startActivity(k);
                                     finish();
                                 }

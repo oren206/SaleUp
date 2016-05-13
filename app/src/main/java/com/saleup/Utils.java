@@ -1,5 +1,10 @@
 package com.saleup;
 
+import android.graphics.Bitmap;
+import android.util.Base64;
+
+import java.io.ByteArrayOutputStream;
+
 class Result{
     boolean status;
     Object data;
@@ -46,4 +51,13 @@ class MyThread implements Runnable {
 }
 
 public class Utils {
+
+    public static String convertBitmapToString(Bitmap bmp){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 90, stream); //compress to which format you want.
+        byte[] byte_arr = stream.toByteArray();
+        String imageStr = Base64.encodeToString(byte_arr,0);
+        return imageStr;
+    }
+
 }
