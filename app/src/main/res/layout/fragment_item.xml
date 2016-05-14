@@ -22,4 +22,21 @@
         android:id="@+id/txtDesc_item"
         android:layout_below="@+id/img_item"
         android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtMakeOffer"
+        android:layout_below="@+id/txtDesc_item"
+        android:layout_alignEnd="@+id/txtDesc_item"
+        android:layout_marginTop="49dp"
+        android:layout_alignStart="@+id/img_item" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Make offer"
+        android:id="@+id/btnMakeOffer"
+        android:layout_alignTop="@+id/txtMakeOffer"
+        android:layout_toEndOf="@+id/txtDesc_item" />
 </RelativeLayout>

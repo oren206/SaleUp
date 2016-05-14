@@ -72,7 +72,7 @@ public class HomeFragment extends Fragment {
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Sending...");
+        progressDialog.setMessage("Collecting data...");
         progressDialog.show();
 
         new Thread(new MyThread(
@@ -149,9 +149,6 @@ public class HomeFragment extends Fragment {
                                             Bundle b = new Bundle();
                                             b.putString("myObject", new Gson().toJson(items[position]));
                                             fragment.setArguments(b);
-                                            /*android.support.v4.app.FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                                            fragmentTransaction.replace(R.id.fragment_container, fragment);
-                                            fragmentTransaction.commit();*/
 
                                             android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                                             fragmentManager.beginTransaction()
