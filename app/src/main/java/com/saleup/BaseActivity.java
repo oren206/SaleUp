@@ -182,6 +182,16 @@ public class BaseActivity extends AppCompatActivity
                     .commit();
 
         }
+        else if(id == R.id.nav_about) {
+            AboutFragment fragment = new AboutFragment();
+
+            android.support.v4.app.FragmentManager fragmentManager = BaseActivity.this.getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+
+        }
         else if(id == R.id.nav_disconnect){
             disconnect();
         }
