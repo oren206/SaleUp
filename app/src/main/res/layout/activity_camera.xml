@@ -48,4 +48,39 @@
         android:id="@+id/btn_camera_submit"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Location"
+        android:id="@+id/textView11"
+        android:layout_above="@+id/txt_desc"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_camera_locationt"
+        android:layout_above="@+id/textView11"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="End Time"
+        android:id="@+id/textView12"
+        android:layout_above="@+id/txt_camera_locationt"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/txt_camera_endDate"
+        android:layout_above="@+id/textView12"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

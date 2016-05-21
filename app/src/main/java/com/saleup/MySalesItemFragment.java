@@ -10,10 +10,12 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -146,12 +148,16 @@ public class MySalesItemFragment extends Fragment {
                                     String jsonMyObject = data.getString("Data");
                                     final Offer[] offers = new Gson().fromJson(jsonMyObject, Offer[].class);
 
-                                    //Adapter adapter = new Adapter(getActivity(), items);
-                                    //_gridView.setAdapter(adapter);
-
                                     ListView grid = (ListView) view.findViewById(R.id.listView_offers);
                                     ListAdapter adapter = new ListAdapter(getActivity(), offers);
                                     grid.setAdapter(adapter);
+
+                                    grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                            selectOffer(offers[position]);
+                                        }
+                                    });
                                 }
                                 else{
 
@@ -178,10 +184,119 @@ public class MySalesItemFragment extends Fragment {
         return view;
     }
 
+    public void selectOffer(final Offer offer){
+
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Removing...");
+        progressDialog.show();
+
+        new Thread(new MyThread(
+                new OnRunMe(){public Result run(){
+                    try  {
+
+                        String token = "";
+                        String user = (String) Cache.GetInstance().Get(getActivity(), "UserData");
+                        try {
+                            JSONTokener tokener = new JSONTokener(user);
+                            JSONObject finalResult = new JSONObject(tokener);
+
+                            token = finalResult.getString("Token");
+
+
+                        }
+                        catch (JSONException ex){
+
+                        }
+
+                        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/offer/SelectOffer");
+
+                        post.addHeader("Content-type", "application/x-www-form-urlencoded");
+                        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+                        urlParameters.add(new BasicNameValuePair("Token", token));
+                        urlParameters.add(new BasicNameValuePair("ItemId", Integer.toString(myObject.ItemId)));
+                        urlParameters.add(new BasicNameValuePair("OfferId", Integer.toString(offer.OfferId)));
+
+                        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+                        HttpResponse responseGet = httpClient.execute(post);
+
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(responseGet.getEntity().getContent(), "UTF-8"));
+                        String json = reader.readLine();
+
+                        JSONTokener tokener = new JSONTokener(json);
+                        JSONObject finalResult = new JSONObject(tokener);
+
+                        httpClient.close();
+
+                        Result result = new Result();
+                        result.status = true;
+                        result.data = finalResult;
+                        return  result;
+
+                    } catch (IOException e) {
+                        Result result = new Result();
+                        result.status = false;
+                        return  result;
+                    }
+                    catch (JSONException e) {
+                        Result result = new Result();
+                        result.status = false;
+                        return  result;
+                    }
+                }},
+                new OnCallback(){public void callback(final Result result){
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            try {
+                                JSONObject data = (JSONObject) result.data;
+
+                                if(data.getInt("ResultNumber") == 1){
+                                    Toast.makeText(getActivity(), "Offer selected successfully!",
+                                            Toast.LENGTH_LONG).show();
+
+                                    getFragmentManager().popBackStackImmediate();
+                                }
+                                else{
+
+                                }
+                                progressDialog.dismiss();
+
+                            }catch (JSONException ex){
+
+                            }
+                        }
+                    });
+
+                }},
+                new OnCallback(){public void callback(Result result){
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            progressDialog.dismiss();
+                        }
+                    });
+
+                }}
+        )).start();
+
+        /*MySalesItemFragment fragment = new MySalesItemFragment();
+        Bundle b = new Bundle();
+        b.putString("myObject", new Gson().toJson(offer));
+        fragment.setArguments(b);
+
+        android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+                */
+    }
+
     public void removeItem(){
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Collecting data...");
+        progressDialog.setMessage("Removing...");
         progressDialog.show();
 
         new Thread(new MyThread(

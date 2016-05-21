@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -253,7 +254,8 @@ public class ItemFragment extends Fragment {
                                 JSONObject data = (JSONObject) result.data;
 
                                 if(data.getInt("ResultNumber") == 1){
-
+                                    Toast.makeText(getActivity(), "Offer submitted successfully!",
+                                            Toast.LENGTH_LONG).show();
                                 }
                                 else{
 

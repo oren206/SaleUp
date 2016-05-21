@@ -71,6 +71,12 @@ public class CameraActivity extends AppCompatActivity {
         TextView _descriptionText = (TextView) findViewById(R.id.txt_desc);
         final String description = _descriptionText.getText().toString();
 
+        TextView _locationText = (TextView) findViewById(R.id.txt_camera_locationt);
+        final String location = _locationText.getText().toString();
+
+        TextView _endDateText = (TextView) findViewById(R.id.txt_camera_endDate);
+        final String endDate = _endDateText.getText().toString();
+
         final ProgressDialog progressDialog = new ProgressDialog(CameraActivity.this);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Sending...");
@@ -101,6 +107,8 @@ public class CameraActivity extends AppCompatActivity {
                         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
                         urlParameters.add(new BasicNameValuePair("Token", token));
                         urlParameters.add(new BasicNameValuePair("Description", description));
+                        urlParameters.add(new BasicNameValuePair("LocationId", location));
+                        urlParameters.add(new BasicNameValuePair("EndDate", endDate));
                         String imageString = "";
                         if(byteArray != null) {
                             //imageString = Base64.encodeToString(byteArray, 0);
