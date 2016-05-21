@@ -16,6 +16,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -140,15 +142,34 @@ public class BaseActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_my_sales) {
+            MySalesFragment fragment = new MySalesFragment();
 
+            android.support.v4.app.FragmentManager fragmentManager = BaseActivity.this.getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
 
+        }
+        else if(id == R.id.nav_my_sales_history) {
+            MySalesHistoryFragment fragment = new MySalesHistoryFragment();
 
-        } else if (id == R.id.nav_slideshow) {
+            android.support.v4.app.FragmentManager fragmentManager = BaseActivity.this.getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
 
-        } else if (id == R.id.nav_manage) {
+        }
+        else if(id == R.id.nav_profile) {
+            MyProfileFragment fragment = new MyProfileFragment();
+
+            android.support.v4.app.FragmentManager fragmentManager = BaseActivity.this.getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
 
         }
         else if(id == R.id.nav_disconnect){

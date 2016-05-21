@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="vertical"
     tools:context="com.saleup.ItemFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -39,4 +40,17 @@
         android:id="@+id/btnMakeOffer"
         android:layout_alignTop="@+id/txtMakeOffer"
         android:layout_toEndOf="@+id/txtDesc_item" />
+
+    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/gridviewItem"
+        android:layout_width="match_parent"
+        android:layout_height="5000dp"
+        android:columnWidth="100dp"
+        android:numColumns="2"
+        android:verticalSpacing="60dp"
+        android:horizontalSpacing="60dp"
+        android:stretchMode="none"
+        android:gravity="bottom"
+        android:layout_below="@+id/btnMakeOffer" />
+
 </RelativeLayout>

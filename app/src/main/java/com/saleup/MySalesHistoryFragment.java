@@ -1,9 +1,7 @@
 package com.saleup;
 
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -36,14 +33,11 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment {
+public class MySalesHistoryFragment extends Fragment {
 
 
-    public HomeFragment() {
+    public MySalesHistoryFragment() {
         // Required empty public constructor
-
-
-
     }
 
 
@@ -51,24 +45,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-        final View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        /*TextView textView = (TextView) view.findViewById(R.id.lblName);
-
-        Activity a = getActivity();
-        String user = (String) Cache.GetInstance().Get(a, "UserData");
-        try {
-            JSONTokener tokener = new JSONTokener(user);
-            JSONObject finalResult = new JSONObject(tokener);
-
-            textView.setText(finalResult.getString("UserName"));
-
-        }
-        catch (JSONException ex){
-
-        }
-*/
+        final View view = inflater.inflate(R.layout.fragment_my_sales_history, container, false);
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setIndeterminate(true);
@@ -94,7 +71,7 @@ public class HomeFragment extends Fragment {
                         }
 
                         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/Item/GetItems");
+                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/Item/GetMyNotActiveItems");
 
                         post.addHeader("Content-type", "application/x-www-form-urlencoded");
                         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
@@ -138,7 +115,7 @@ public class HomeFragment extends Fragment {
                                     String jsonMyObject = data.getString("Data");
                                     final Item[] items = new Gson().fromJson(jsonMyObject, Item[].class);
 
-                                    ExpandableHeightGridView grid = (ExpandableHeightGridView) view.findViewById(R.id.gridview);
+                                    ExpandableHeightGridView grid = (ExpandableHeightGridView) view.findViewById(R.id.gridview_my_sales_history);
                                     Adapter adapter = new Adapter(getActivity(), items);
                                     grid.setAdapter(adapter);
                                     grid.setExpanded(true);
@@ -146,7 +123,7 @@ public class HomeFragment extends Fragment {
                                     grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                         @Override
                                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                            ItemFragment fragment = new ItemFragment();
+                                            MySalesHistoryItemFragment fragment = new MySalesHistoryItemFragment();
                                             Bundle b = new Bundle();
                                             b.putString("myObject", new Gson().toJson(items[position]));
                                             fragment.setArguments(b);
@@ -185,7 +162,6 @@ public class HomeFragment extends Fragment {
 
                 }}
         )).start();
-
 
 
         return view;

@@ -1,19 +1,14 @@
 package com.saleup;
 
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
+import android.widget.Button;
 import android.widget.TextView;
-
-import com.google.gson.Gson;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -36,14 +31,15 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment {
+public class MyProfileFragment extends Fragment {
 
+    TextView _txtFirstName = null;
+    TextView _txtLastName = null;
+    TextView _txtEmail = null;
+    TextView _txtLocation = null;
 
-    public HomeFragment() {
+    public MyProfileFragment() {
         // Required empty public constructor
-
-
-
     }
 
 
@@ -51,24 +47,46 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        final View view = inflater.inflate(R.layout.fragment_my_profile, container, false);
 
-        final View view = inflater.inflate(R.layout.fragment_home, container, false);
+        Button _updateButton = (Button) view.findViewById(R.id.btn_update_my_profile);
+        _updateButton.setOnClickListener(new View.OnClickListener() {
 
-        /*TextView textView = (TextView) view.findViewById(R.id.lblName);
+            @Override
+            public void onClick(View v) {
+                update();
+            }
+        });
 
-        Activity a = getActivity();
-        String user = (String) Cache.GetInstance().Get(a, "UserData");
+        _txtFirstName = (TextView) view.findViewById(R.id.txt_firstname_my_profile);
+        _txtLastName = (TextView) view.findViewById(R.id.txt_lastname_my_profile);
+        _txtEmail = (TextView) view.findViewById(R.id.txt_email_my_profile);
+        _txtLocation = (TextView) view.findViewById(R.id.txt_location_my_profile);
+
+        String user = (String) Cache.GetInstance().Get(getActivity(), "UserData");
         try {
             JSONTokener tokener = new JSONTokener(user);
             JSONObject finalResult = new JSONObject(tokener);
 
-            textView.setText(finalResult.getString("UserName"));
+            _txtFirstName.setText(finalResult.getString("FirstName"));
+            _txtLastName.setText(finalResult.getString("LastName"));
+            _txtEmail.setText(finalResult.getString("Email"));
+            _txtLocation.setText(finalResult.getString("LocationId"));
+
 
         }
         catch (JSONException ex){
 
         }
-*/
+
+        return view;
+    }
+
+    public void update(){
+        final String firstName = _txtFirstName.getText().toString();
+        final String lastName = _txtLastName.getText().toString();
+        final String email = _txtEmail.getText().toString();
+        final String location = _txtLocation.getText().toString();
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setIndeterminate(true);
@@ -94,11 +112,15 @@ public class HomeFragment extends Fragment {
                         }
 
                         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/Item/GetItems");
+                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/User/Update");
 
                         post.addHeader("Content-type", "application/x-www-form-urlencoded");
                         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
                         urlParameters.add(new BasicNameValuePair("Token", token));
+                        urlParameters.add(new BasicNameValuePair("FirstName", firstName));
+                        urlParameters.add(new BasicNameValuePair("LastName", lastName));
+                        urlParameters.add(new BasicNameValuePair("Email", email));
+                        urlParameters.add(new BasicNameValuePair("LocationId", location));
 
                         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
@@ -135,32 +157,6 @@ public class HomeFragment extends Fragment {
                                 JSONObject data = (JSONObject) result.data;
 
                                 if(data.getInt("ResultNumber") == 1){
-                                    String jsonMyObject = data.getString("Data");
-                                    final Item[] items = new Gson().fromJson(jsonMyObject, Item[].class);
-
-                                    ExpandableHeightGridView grid = (ExpandableHeightGridView) view.findViewById(R.id.gridview);
-                                    Adapter adapter = new Adapter(getActivity(), items);
-                                    grid.setAdapter(adapter);
-                                    grid.setExpanded(true);
-
-                                    grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                        @Override
-                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                            ItemFragment fragment = new ItemFragment();
-                                            Bundle b = new Bundle();
-                                            b.putString("myObject", new Gson().toJson(items[position]));
-                                            fragment.setArguments(b);
-
-                                            android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                                            fragmentManager.beginTransaction()
-                                                    .replace(R.id.fragment_container, fragment)
-                                                    .addToBackStack(null)
-                                                    .commit();
-                                        }
-                                    });
-
-
-
 
                                 }
                                 else{
@@ -185,10 +181,6 @@ public class HomeFragment extends Fragment {
 
                 }}
         )).start();
-
-
-
-        return view;
     }
 
 }

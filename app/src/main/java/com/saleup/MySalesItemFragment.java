@@ -2,7 +2,6 @@ package com.saleup;
 
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -12,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -39,14 +38,11 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ItemFragment extends Fragment {
+public class MySalesItemFragment extends Fragment {
 
     Item myObject = null;
 
-    TextView _txtOffer = null;
-    GridView _gridView = null;
-
-    public ItemFragment() {
+    public MySalesItemFragment() {
         // Required empty public constructor
     }
 
@@ -55,14 +51,14 @@ public class ItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_item, container, false);
+        final View view = inflater.inflate(R.layout.fragment_my_sales_item, container, false);
 
-        Button _offerButton = (Button) view.findViewById(R.id.btnMakeOffer);
-        _offerButton.setOnClickListener(new View.OnClickListener() {
+        Button _removeButton = (Button) view.findViewById(R.id.btn_my_sales_item_remove);
+        _removeButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                submitOffer();
+                removeItem();
             }
         });
 
@@ -70,18 +66,14 @@ public class ItemFragment extends Fragment {
 
         myObject = new Gson().fromJson(jsonMyObject, Item.class);
 
-        TextView text = (TextView) view.findViewById(R.id.txtDesc_item);
+        TextView text = (TextView) view.findViewById(R.id.txtDesc_my_sales);
         text.setText(myObject.Description);
-
-        _txtOffer = (TextView) view.findViewById(R.id.txtMakeOffer);
-
-        _gridView = (GridView) view.findViewById(R.id.gridviewItem);
 
         if(myObject.Image != null) {
             byte[] bitmapdata = Base64.decode(myObject.Image, 0);
             Bitmap bmp = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
 
-            ImageView imageView = (ImageView) view.findViewById(R.id.img_item);
+            ImageView imageView = (ImageView) view.findViewById(R.id.img_my_sales);
             imageView.setImageBitmap(bmp);
         }
 
@@ -109,7 +101,7 @@ public class ItemFragment extends Fragment {
                         }
 
                         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/Item/UpdateViews");
+                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/offer/GetByItem");
 
                         post.addHeader("Content-type", "application/x-www-form-urlencoded");
                         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
@@ -152,10 +144,14 @@ public class ItemFragment extends Fragment {
 
                                 if(data.getInt("ResultNumber") == 1){
                                     String jsonMyObject = data.getString("Data");
-                                    final Item[] items = new Gson().fromJson(jsonMyObject, Item[].class);
+                                    final Offer[] offers = new Gson().fromJson(jsonMyObject, Offer[].class);
 
-                                    Adapter adapter = new Adapter(getActivity(), items);
-                                    _gridView.setAdapter(adapter);
+                                    //Adapter adapter = new Adapter(getActivity(), items);
+                                    //_gridView.setAdapter(adapter);
+
+                                    ListView grid = (ListView) view.findViewById(R.id.listView_offers);
+                                    ListAdapter adapter = new ListAdapter(getActivity(), offers);
+                                    grid.setAdapter(adapter);
                                 }
                                 else{
 
@@ -165,7 +161,6 @@ public class ItemFragment extends Fragment {
                             }catch (JSONException ex){
 
                             }
-                            _txtOffer.setText("");
                         }
                     });
 
@@ -183,12 +178,10 @@ public class ItemFragment extends Fragment {
         return view;
     }
 
-    public void submitOffer(){
-        final String offer = _txtOffer.getText().toString();
-
+    public void removeItem(){
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Sending...");
+        progressDialog.setMessage("Collecting data...");
         progressDialog.show();
 
         new Thread(new MyThread(
@@ -210,13 +203,12 @@ public class ItemFragment extends Fragment {
                         }
 
                         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/Item/SubmitOffer");
+                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/item/RemoveItem");
 
                         post.addHeader("Content-type", "application/x-www-form-urlencoded");
                         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
                         urlParameters.add(new BasicNameValuePair("Token", token));
                         urlParameters.add(new BasicNameValuePair("ItemId", Integer.toString(myObject.ItemId)));
-                        urlParameters.add(new BasicNameValuePair("Amount", offer));
 
                         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
@@ -253,17 +245,16 @@ public class ItemFragment extends Fragment {
                                 JSONObject data = (JSONObject) result.data;
 
                                 if(data.getInt("ResultNumber") == 1){
-
+                                    getFragmentManager().popBackStackImmediate();
                                 }
                                 else{
 
                                 }
+                                progressDialog.dismiss();
 
                             }catch (JSONException ex){
 
                             }
-                            _txtOffer.setText("");
-                            progressDialog.dismiss();
                         }
                     });
 
@@ -271,7 +262,6 @@ public class ItemFragment extends Fragment {
                 new OnCallback(){public void callback(Result result){
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
-
                             progressDialog.dismiss();
                         }
                     });

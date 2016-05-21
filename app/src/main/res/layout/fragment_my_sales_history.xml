@@ -1,22 +1,20 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:scrollbars="vertical"
-    tools:context="com.saleup.HomeFragment">
+    android:layout_height="match_parent"
+    tools:context="com.saleup.MySalesHistoryFragment">
 
     <!-- TODO: Update blank fragment layout -->
-
     <com.saleup.ExpandableHeightGridView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/gridview"
+        android:id="@+id/gridview_my_sales_history"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:columnWidth="100dp"
         android:numColumns="2"
-        android:verticalSpacing="80dp"
+        android:verticalSpacing="60dp"
         android:horizontalSpacing="60dp"
         android:stretchMode="columnWidth"
         android:gravity="center"
         />
 
-</RelativeLayout>
+</FrameLayout>

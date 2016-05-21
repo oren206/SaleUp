@@ -37,6 +37,7 @@ public class CameraActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     Bitmap imageBitmap = null;
     byte[] byteArray = {1,2,3};
+    static boolean firstTaken = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class CameraActivity extends AppCompatActivity {
                 submitItem();
             }
         });
+
     }
 
     public void submitItem(){
@@ -177,7 +179,7 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     public void takePhoto(){
-
+        firstTaken = true;
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);

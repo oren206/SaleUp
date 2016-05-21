@@ -30,7 +30,7 @@
         android:text="Take picture"
         android:id="@+id/button"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
