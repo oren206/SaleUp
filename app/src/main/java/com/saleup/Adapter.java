@@ -3,6 +3,7 @@ package com.saleup;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,16 +47,17 @@ public class Adapter extends BaseAdapter {
         }
 
         ImageView img = (ImageView) convertView.findViewById(R.id.imageView2);
-        TextView text = (TextView) convertView.findViewById(R.id.textView5);
+        //TextView text = (TextView) convertView.findViewById(R.id.textView5);
 
         if(images[position].Image != null) {
             byte[] bitmapdata = Base64.decode(images[position].Image, 0);
             Bitmap bmp = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
 
             img.setImageBitmap(bmp);
+            img.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
         //img.setImageResource(images[position].Image);
-        text.setText(images[position].Description);
+        //text.setText(images[position].Description);
 
         //img.setScaleType(ImageView.ScaleType.CENTER_CROP);
         //img.setLayoutParams(new GridView.LayoutParams(115,115));
