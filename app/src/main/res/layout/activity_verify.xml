@@ -63,7 +63,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="we've sent an sms with an activation code to your phone"
-        android:id="@+id/textView11"
+        android:id="@+id/lbl_verify_desc"
         android:layout_gravity="center_horizontal"
         android:layout_above="@+id/linearLayout"
         android:layout_centerHorizontal="true" />

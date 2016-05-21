@@ -142,7 +142,17 @@ public class BaseActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_my_sales) {
+        if (id == R.id.nav_home) {
+            HomeFragment fragment = new HomeFragment();
+
+            android.support.v4.app.FragmentManager fragmentManager = BaseActivity.this.getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+
+        }
+        else if (id == R.id.nav_my_sales) {
             MySalesFragment fragment = new MySalesFragment();
 
             android.support.v4.app.FragmentManager fragmentManager = BaseActivity.this.getSupportFragmentManager();

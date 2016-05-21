@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -34,6 +35,7 @@ public class VerifyActivity extends AppCompatActivity {
 
     @InjectView(R.id.txt_code) EditText _codeText;
     @InjectView(R.id.btn_verify) Button _verifyButton;
+    @InjectView(R.id.lbl_verify_desc) TextView _lblDesc;
     @InjectView(R.id.btnResend) Button _resendButton;
 
     @Override
@@ -59,7 +61,8 @@ public class VerifyActivity extends AppCompatActivity {
             }
         });
 
-
+        String phone = (String)Cache.GetInstance().Get(VerifyActivity.this, "PhoneNumber");
+        _lblDesc.setText(_lblDesc.getText().toString() + " " + phone);
 
     }
 
@@ -72,6 +75,8 @@ public class VerifyActivity extends AppCompatActivity {
         progressDialog.show();
 
         final String phone = (String)Cache.GetInstance().Get(VerifyActivity.this, "PhoneNumber");
+
+
 
         new Thread(new MyThread(
                 new OnRunMe(){public Result run(){
