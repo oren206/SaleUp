@@ -22,16 +22,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/scrollView"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:weightSum="1"
+        android:id="@+id/linearLayout">
 
         <EditText
             android:layout_width="169dp"
             android:layout_height="wrap_content"
             android:id="@+id/txt_code"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:maxLength="4"
+            android:gravity="center"
+            />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Enter code"
@@ -39,17 +44,27 @@
             android:layout_gravity="center_horizontal" />
 
         <Button
-            android:layout_width="240dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="Verify"
             android:id="@+id/btn_verify"
             android:layout_gravity="center_horizontal" />
 
         <Button
-            android:layout_width="242dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="Resend code"
             android:id="@+id/btnResend"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="234dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="we've sent an sms with an activation code to your phone"
+        android:id="@+id/textView11"
+        android:layout_gravity="center_horizontal"
+        android:layout_above="@+id/linearLayout"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

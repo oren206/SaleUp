@@ -34,7 +34,7 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         final Context con = this.getApplicationContext();
-
+/*
         // Acquire a reference to the system Location Manager
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
@@ -55,7 +55,7 @@ public class SplashActivity extends Activity {
 
         // Register the listener with the Location Manager to receive location updates
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-
+*/
         new Thread(new MyThread(
                 new OnRunMe(){public Result run(){
                     try  {
