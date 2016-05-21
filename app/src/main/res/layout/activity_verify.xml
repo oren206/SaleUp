@@ -32,6 +32,7 @@
             android:id="@+id/txt_code"
             android:layout_gravity="center_horizontal"
             android:maxLength="4"
+            android:inputType="phone"
             android:gravity="center"
             />
 
