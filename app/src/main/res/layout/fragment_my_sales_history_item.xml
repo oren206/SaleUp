@@ -1,17 +1,19 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.saleup.MySalesHistoryItemFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <ImageView
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:id="@+id/img_my_sales_history"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="41dp" />
+        android:layout_marginTop="41dp"
+        android:layout_gravity="center_horizontal|top" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -20,6 +22,17 @@
         android:text="Large Text"
         android:id="@+id/txtDesc_my_sales_history"
         android:layout_below="@+id/img_my_sales_history"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal|top" />
 
-</FrameLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go To Chat"
+        android:id="@+id/btn_my_sales_history_chat"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="37dp" />
+
+</RelativeLayout>

@@ -10,6 +10,7 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -67,9 +68,29 @@ public class MySalesHistoryItemFragment extends Fragment {
             imageView.setImageBitmap(bmp);
         }
 
+        Button _btnChat = (Button) view.findViewById(R.id.btn_my_sales_history_chat);
+        _btnChat.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                goToChat();
+            }
+        });
 
         return view;
+    }
+
+    public void goToChat(){
+        ChatFragment fragment = new ChatFragment();
+        Bundle b = new Bundle();
+        b.putString("myObject", new Gson().toJson(myObject));
+        fragment.setArguments(b);
+
+        android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
 }

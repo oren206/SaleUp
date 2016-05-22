@@ -2,20 +2,15 @@ package com.saleup;
 
 
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -40,11 +35,13 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MySalesItemFragment extends Fragment {
+public class ChatFragment extends Fragment {
 
     Item myObject = null;
+    EditText _txtMessage = null;
+    View view = null;
 
-    public MySalesItemFragment() {
+    public ChatFragment() {
         // Required empty public constructor
     }
 
@@ -53,31 +50,22 @@ public class MySalesItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_my_sales_item, container, false);
-
-        Button _removeButton = (Button) view.findViewById(R.id.btn_my_sales_item_remove);
-        _removeButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                removeItem();
-            }
-        });
+        view = inflater.inflate(R.layout.fragment_chat, container, false);
 
         String jsonMyObject = getArguments().getString("myObject");
 
         myObject = new Gson().fromJson(jsonMyObject, Item.class);
 
-        TextView text = (TextView) view.findViewById(R.id.txtDesc_my_sales);
-        text.setText(myObject.Description);
+        Button _sendButton = (Button) view.findViewById(R.id.btn_chat_send);
+        _sendButton.setOnClickListener(new View.OnClickListener() {
 
-        if(myObject.Image != null) {
-            byte[] bitmapdata = Base64.decode(myObject.Image, 0);
-            Bitmap bmp = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
+            @Override
+            public void onClick(View v) {
+                sendMessage();
+            }
+        });
 
-            ImageView imageView = (ImageView) view.findViewById(R.id.img_my_sales);
-            imageView.setImageBitmap(bmp);
-        }
+        _txtMessage = (EditText) view.findViewById(R.id.txt_chat_message);
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setIndeterminate(true);
@@ -103,7 +91,7 @@ public class MySalesItemFragment extends Fragment {
                         }
 
                         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/offer/GetByItem");
+                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/ChatMessage/GetChatMessages");
 
                         post.addHeader("Content-type", "application/x-www-form-urlencoded");
                         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
@@ -146,18 +134,13 @@ public class MySalesItemFragment extends Fragment {
 
                                 if(data.getInt("ResultNumber") == 1){
                                     String jsonMyObject = data.getString("Data");
-                                    final Offer[] offers = new Gson().fromJson(jsonMyObject, Offer[].class);
+                                    final ChatMessage[] messages = new Gson().fromJson(jsonMyObject, ChatMessage[].class);
 
-                                    ListView grid = (ListView) view.findViewById(R.id.listView_offers);
-                                    ListAdapter adapter = new ListAdapter(getActivity(), offers);
+                                    ListView grid = (ListView) view.findViewById(R.id.listView_chat);
+                                    ChatAdapter adapter = new ChatAdapter(getActivity(), messages);
                                     grid.setAdapter(adapter);
 
-                                    grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                        @Override
-                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                            selectOffer(offers[position]);
-                                        }
-                                    });
+
                                 }
                                 else{
 
@@ -167,6 +150,7 @@ public class MySalesItemFragment extends Fragment {
                             }catch (JSONException ex){
 
                             }
+
                         }
                     });
 
@@ -184,11 +168,12 @@ public class MySalesItemFragment extends Fragment {
         return view;
     }
 
-    public void selectOffer(final Offer offer){
+    public void sendMessage(){
+        final String message = _txtMessage.getText().toString();
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Removing...");
+        progressDialog.setMessage("Collecting data...");
         progressDialog.show();
 
         new Thread(new MyThread(
@@ -210,13 +195,13 @@ public class MySalesItemFragment extends Fragment {
                         }
 
                         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/offer/SelectOffer");
+                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/ChatMessage/SendChatMessage");
 
                         post.addHeader("Content-type", "application/x-www-form-urlencoded");
                         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
                         urlParameters.add(new BasicNameValuePair("Token", token));
                         urlParameters.add(new BasicNameValuePair("ItemId", Integer.toString(myObject.ItemId)));
-                        urlParameters.add(new BasicNameValuePair("OfferId", Integer.toString(offer.OfferId)));
+                        urlParameters.add(new BasicNameValuePair("Message", message));
 
                         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
@@ -253,19 +238,15 @@ public class MySalesItemFragment extends Fragment {
                                 JSONObject data = (JSONObject) result.data;
 
                                 if(data.getInt("ResultNumber") == 1){
-                                    Toast.makeText(getActivity(), "Offer selected successfully!",
-                                            Toast.LENGTH_LONG).show();
 
-                                    ChatFragment fragment = new ChatFragment();
-                                    Bundle b = new Bundle();
-                                    b.putString("myObject", new Gson().toJson(myObject));
-                                    fragment.setArguments(b);
+                                    String jsonMyObject = data.getString("Data");
+                                    final ChatMessage[] messages = new Gson().fromJson(jsonMyObject, ChatMessage[].class);
 
-                                    android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                                    fragmentManager.beginTransaction()
-                                            .replace(R.id.fragment_container, fragment)
-                                            .addToBackStack(null)
-                                            .commit();
+                                    ListView grid = (ListView) view.findViewById(R.id.listView_chat);
+                                    ChatAdapter adapter = new ChatAdapter(getActivity(), messages);
+                                    grid.setAdapter(adapter);
+
+
                                 }
                                 else{
 
@@ -275,110 +256,7 @@ public class MySalesItemFragment extends Fragment {
                             }catch (JSONException ex){
 
                             }
-                        }
-                    });
-
-                }},
-                new OnCallback(){public void callback(Result result){
-                    getActivity().runOnUiThread(new Runnable() {
-                        public void run() {
-                            progressDialog.dismiss();
-                        }
-                    });
-
-                }}
-        )).start();
-
-        /*MySalesItemFragment fragment = new MySalesItemFragment();
-        Bundle b = new Bundle();
-        b.putString("myObject", new Gson().toJson(offer));
-        fragment.setArguments(b);
-
-        android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
-                */
-    }
-
-    public void removeItem(){
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Removing...");
-        progressDialog.show();
-
-        new Thread(new MyThread(
-                new OnRunMe(){public Result run(){
-                    try  {
-
-                        String token = "";
-                        String user = (String) Cache.GetInstance().Get(getActivity(), "UserData");
-                        try {
-                            JSONTokener tokener = new JSONTokener(user);
-                            JSONObject finalResult = new JSONObject(tokener);
-
-                            token = finalResult.getString("Token");
-
-
-                        }
-                        catch (JSONException ex){
-
-                        }
-
-                        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/item/RemoveItem");
-
-                        post.addHeader("Content-type", "application/x-www-form-urlencoded");
-                        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-                        urlParameters.add(new BasicNameValuePair("Token", token));
-                        urlParameters.add(new BasicNameValuePair("ItemId", Integer.toString(myObject.ItemId)));
-
-                        post.setEntity(new UrlEncodedFormEntity(urlParameters));
-
-                        HttpResponse responseGet = httpClient.execute(post);
-
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(responseGet.getEntity().getContent(), "UTF-8"));
-                        String json = reader.readLine();
-
-                        JSONTokener tokener = new JSONTokener(json);
-                        JSONObject finalResult = new JSONObject(tokener);
-
-                        httpClient.close();
-
-                        Result result = new Result();
-                        result.status = true;
-                        result.data = finalResult;
-                        return  result;
-
-                    } catch (IOException e) {
-                        Result result = new Result();
-                        result.status = false;
-                        return  result;
-                    }
-                    catch (JSONException e) {
-                        Result result = new Result();
-                        result.status = false;
-                        return  result;
-                    }
-                }},
-                new OnCallback(){public void callback(final Result result){
-                    getActivity().runOnUiThread(new Runnable() {
-                        public void run() {
-                            try {
-                                JSONObject data = (JSONObject) result.data;
-
-                                if(data.getInt("ResultNumber") == 1){
-                                    getFragmentManager().popBackStackImmediate();
-                                }
-                                else{
-
-                                }
-                                progressDialog.dismiss();
-
-                            }catch (JSONException ex){
-
-                            }
+                            _txtMessage.setText("");
                         }
                     });
 

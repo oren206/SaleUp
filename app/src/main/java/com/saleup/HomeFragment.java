@@ -131,8 +131,7 @@ public class HomeFragment extends Fragment {
                 new OnCallback(){public void callback(final Result result){
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
-                            try {
-                                JSONObject data = (JSONObject) result.data;
+                            try {JSONObject data = (JSONObject) result.data;
 
                                 if(data.getInt("ResultNumber") == 1){
                                     String jsonMyObject = data.getString("Data");

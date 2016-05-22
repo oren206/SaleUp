@@ -7,12 +7,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class ListAdapter extends BaseAdapter {
+public class ChatAdapter extends BaseAdapter {
 
     Context c;
-    Offer[] images;
+    ChatMessage[] images;
 
-    public ListAdapter(Context c, Offer[] images){
+    public ChatAdapter(Context c, ChatMessage[] images){
         this.c = c;
         this.images = images;
 
@@ -37,16 +37,14 @@ public class ListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null){
             LayoutInflater inflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.fragment_offer_item, null);
+            convertView = inflater.inflate(R.layout.fragment_chat_item, null);
         }
 
-        TextView textPrice = (TextView) convertView.findViewById(R.id.txt_offer_price);
-        TextView textLocation = (TextView) convertView.findViewById(R.id.txt_offer_location);
-        TextView textDate = (TextView) convertView.findViewById(R.id.txt_offer_date);
+        TextView textUserName = (TextView) convertView.findViewById(R.id.txt_chat_username);
+        TextView textMessage = (TextView) convertView.findViewById(R.id.txt_chat_message);
 
-        textPrice.setText(Integer.toString(images[position].Price));
-        textLocation.setText(Integer.toString(images[position].LocationId));
-        //textDate.setText(images[position].EndDate);
+        textUserName.setText(images[position].UserName + ": ");
+        textMessage.setText(images[position].Message);
 
         return convertView;
     }
