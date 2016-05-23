@@ -160,13 +160,16 @@ public class MySalesItemFragment extends Fragment {
                                     });
                                 }
                                 else{
-
+                                    Toast.makeText(getActivity(), "Error! try again!",
+                                            Toast.LENGTH_LONG).show();
                                 }
-                                progressDialog.dismiss();
+
 
                             }catch (JSONException ex){
-
+                                Toast.makeText(getActivity(), "Unknown error occurred!",
+                                        Toast.LENGTH_LONG).show();
                             }
+                            progressDialog.dismiss();
                         }
                     });
 
@@ -268,13 +271,17 @@ public class MySalesItemFragment extends Fragment {
                                             .commit();
                                 }
                                 else{
-
+                                    Toast.makeText(getActivity(), "Error! try again!",
+                                            Toast.LENGTH_LONG).show();
                                 }
-                                progressDialog.dismiss();
+
 
                             }catch (JSONException ex){
-
+                                Toast.makeText(getActivity(), "Unknown error occurred!",
+                                        Toast.LENGTH_LONG).show();
                             }
+
+                            progressDialog.dismiss();
                         }
                     });
 
@@ -372,13 +379,16 @@ public class MySalesItemFragment extends Fragment {
                                     getFragmentManager().popBackStackImmediate();
                                 }
                                 else{
-
+                                    Toast.makeText(getActivity(), "Error! try again!",
+                                            Toast.LENGTH_LONG).show();
                                 }
-                                progressDialog.dismiss();
+
 
                             }catch (JSONException ex){
-
+                                Toast.makeText(getActivity(), "Unknown error occurred!",
+                                        Toast.LENGTH_LONG).show();
                             }
+                            progressDialog.dismiss();
                         }
                     });
 

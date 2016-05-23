@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.gms.iid.InstanceID;
 
@@ -127,7 +128,8 @@ public class SplashActivity extends Activity {
                                 }
 
                             }catch (JSONException ex){
-
+                                Toast.makeText(SplashActivity.this, "Unknown error occurred!",
+                                        Toast.LENGTH_LONG).show();
                             }
                         }
                     });

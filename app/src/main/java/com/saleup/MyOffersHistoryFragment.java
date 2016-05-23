@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -34,10 +33,10 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MySalesFragment extends Fragment {
+public class MyOffersHistoryFragment extends Fragment {
 
 
-    public MySalesFragment() {
+    public MyOffersHistoryFragment() {
         // Required empty public constructor
     }
 
@@ -46,7 +45,7 @@ public class MySalesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_my_sales, container, false);
+        final View view = inflater.inflate(R.layout.fragment_my_offers_history, container, false);
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setIndeterminate(true);
@@ -72,7 +71,7 @@ public class MySalesFragment extends Fragment {
                         }
 
                         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/Item/GetMyActiveItems");
+                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/Item/GetNotActiveItemsByOffer");
 
                         post.addHeader("Content-type", "application/x-www-form-urlencoded");
                         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
@@ -116,7 +115,7 @@ public class MySalesFragment extends Fragment {
                                     String jsonMyObject = data.getString("Data");
                                     final Item[] items = new Gson().fromJson(jsonMyObject, Item[].class);
 
-                                    ExpandableHeightGridView grid = (ExpandableHeightGridView) view.findViewById(R.id.gridview_my_sales);
+                                    ExpandableHeightGridView grid = (ExpandableHeightGridView) view.findViewById(R.id.gridview_my_offers_history);
                                     Adapter adapter = new Adapter(getActivity(), items);
                                     grid.setAdapter(adapter);
                                     grid.setExpanded(true);
@@ -124,7 +123,7 @@ public class MySalesFragment extends Fragment {
                                     grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                         @Override
                                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                            MySalesItemFragment fragment = new MySalesItemFragment();
+                                            MyOffersHistoryItemFragment fragment = new MyOffersHistoryItemFragment();
                                             Bundle b = new Bundle();
                                             b.putString("myObject", new Gson().toJson(items[position]));
                                             fragment.setArguments(b);

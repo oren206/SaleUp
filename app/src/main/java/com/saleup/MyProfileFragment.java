@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -160,11 +161,13 @@ public class MyProfileFragment extends Fragment {
                                     Cache.GetInstance().Set(getActivity(), "UserData", data.getString("Data"));
                                 }
                                 else{
-
+                                    Toast.makeText(getActivity(), "Error! try again!",
+                                            Toast.LENGTH_LONG).show();
                                 }
 
                             }catch (JSONException ex){
-
+                                Toast.makeText(getActivity(), "Unknown error occurred!",
+                                        Toast.LENGTH_LONG).show();
                             }
                             progressDialog.dismiss();
                         }

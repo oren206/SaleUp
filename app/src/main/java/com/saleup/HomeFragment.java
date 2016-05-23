@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -163,11 +164,13 @@ public class HomeFragment extends Fragment {
 
                                 }
                                 else{
-
+                                    Toast.makeText(getActivity(), "Error! try again!",
+                                            Toast.LENGTH_LONG).show();
                                 }
 
                             }catch (JSONException ex){
-
+                                Toast.makeText(getActivity(), "Unknown error occurred!",
+                                        Toast.LENGTH_LONG).show();
                             }
                             progressDialog.dismiss();
                         }

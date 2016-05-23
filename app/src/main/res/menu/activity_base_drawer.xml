@@ -23,6 +23,10 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="My Offers" />
         <item
+            android:id="@+id/nav_my_offers_history"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="My Offers History" />
+        <item
             android:id="@+id/nav_hot_items"
             android:icon="@drawable/ic_menu_manage"
             android:title="Hot Items" />

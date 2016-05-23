@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -123,7 +124,7 @@ public class VerifyActivity extends AppCompatActivity {
                 new OnCallback(){public void callback(final Result result){
                     VerifyActivity.this.runOnUiThread(new Runnable() {
                         public void run() {
-                            progressDialog.dismiss();
+
 
                             try {
                                 JSONObject data = (JSONObject) result.data;
@@ -132,14 +133,16 @@ public class VerifyActivity extends AppCompatActivity {
 
                                 }
                                 else{
-
+                                    Toast.makeText(VerifyActivity.this, "Error! try again!",
+                                            Toast.LENGTH_LONG).show();
                                 }
 
                             }catch (JSONException ex){
-
+                                Toast.makeText(VerifyActivity.this, "Unknown error occurred!",
+                                        Toast.LENGTH_LONG).show();
                             }
 
-
+                            progressDialog.dismiss();
                         }
                     });
 
@@ -158,7 +161,7 @@ public class VerifyActivity extends AppCompatActivity {
     public void verifyCode() {
         Log.d(TAG, "verifyCode");
 
-        _verifyButton.setEnabled(false);
+        //_verifyButton.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(VerifyActivity.this);
         progressDialog.setIndeterminate(true);
@@ -223,12 +226,15 @@ public class VerifyActivity extends AppCompatActivity {
                                     startActivity(k);
                                 }
                                 else{
-
+                                    Toast.makeText(VerifyActivity.this, "Error! try again!",
+                                            Toast.LENGTH_LONG).show();
                                 }
 
                             }catch (JSONException ex){
-
+                                Toast.makeText(VerifyActivity.this, "Unknown error occurred!",
+                                        Toast.LENGTH_LONG).show();
                             }
+                            progressDialog.dismiss();
                         }
                     });
 

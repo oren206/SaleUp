@@ -159,14 +159,17 @@ public class ItemFragment extends Fragment {
                                     _gridView.setAdapter(adapter);
                                 }
                                 else{
-
+                                    Toast.makeText(getActivity(), "Error! try again!",
+                                            Toast.LENGTH_LONG).show();
                                 }
-                                progressDialog.dismiss();
+
 
                             }catch (JSONException ex){
-
+                                Toast.makeText(getActivity(), "Unknown error occurred!",
+                                        Toast.LENGTH_LONG).show();
                             }
                             _txtOffer.setText("");
+                            progressDialog.dismiss();
                         }
                     });
 
@@ -258,11 +261,13 @@ public class ItemFragment extends Fragment {
                                             Toast.LENGTH_LONG).show();
                                 }
                                 else{
-
+                                    Toast.makeText(getActivity(), "Error! try again!",
+                                            Toast.LENGTH_LONG).show();
                                 }
 
                             }catch (JSONException ex){
-
+                                Toast.makeText(getActivity(), "Unknown error occurred!",
+                                        Toast.LENGTH_LONG).show();
                             }
                             _txtOffer.setText("");
                             progressDialog.dismiss();

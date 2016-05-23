@@ -152,6 +152,8 @@ public class LoginActivity extends AppCompatActivity {
                             Cache.GetInstance().Set(LoginActivity.this, "PhoneNumber", phone);
 
                             onLoginSuccess();
+
+                            progressDialog.dismiss();
                         }
                     });
 

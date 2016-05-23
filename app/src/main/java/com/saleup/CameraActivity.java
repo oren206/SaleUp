@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -161,13 +162,17 @@ public class CameraActivity extends AppCompatActivity {
                                     finish();
                                 }
                                 else{
+                                    Toast.makeText(CameraActivity.this, "Error! try again",
+                                            Toast.LENGTH_LONG).show();
+
                                     Intent k = new Intent(CameraActivity.this, LoginActivity.class);
                                     startActivity(k);
                                     finish();
                                 }
 
                             }catch (JSONException ex){
-
+                                Toast.makeText(CameraActivity.this, "Unknown error occurred!",
+                                        Toast.LENGTH_LONG).show();
                             }
                             progressDialog.dismiss();
                         }

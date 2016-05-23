@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -174,6 +175,26 @@ public class BaseActivity extends AppCompatActivity
                     .commit();
 
         }
+        else if (id == R.id.nav_my_offers) {
+            MyOffersFragment fragment = new MyOffersFragment();
+
+            android.support.v4.app.FragmentManager fragmentManager = BaseActivity.this.getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+
+        }
+        else if (id == R.id.nav_my_offers_history) {
+            MyOffersHistoryFragment fragment = new MyOffersHistoryFragment();
+
+            android.support.v4.app.FragmentManager fragmentManager = BaseActivity.this.getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+
+        }
         else if(id == R.id.nav_profile) {
             MyProfileFragment fragment = new MyProfileFragment();
 
@@ -273,15 +294,20 @@ public class BaseActivity extends AppCompatActivity
                                 JSONObject data = (JSONObject) result.data;
 
                                 if(data.getInt("ResultNumber") == 1){
+                                    Toast.makeText(BaseActivity.this, "Disconnected successfully!",
+                                            Toast.LENGTH_LONG).show();
+
                                     Intent k = new Intent(BaseActivity.this, LoginActivity.class);
                                     startActivity(k);
                                 }
                                 else{
-
+                                    Toast.makeText(BaseActivity.this, "Error! try again",
+                                            Toast.LENGTH_LONG).show();
                                 }
 
                             }catch (JSONException ex){
-
+                                Toast.makeText(BaseActivity.this, "Unknown error occurred!",
+                                        Toast.LENGTH_LONG).show();
                             }
                             progressDialog.dismiss();
                         }

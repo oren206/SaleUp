@@ -2,13 +2,17 @@ package com.saleup;
 
 
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,13 +40,11 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ChatFragment extends Fragment {
+public class MyOffersItemFragment extends Fragment {
 
     Item myObject = null;
-    EditText _txtMessage = null;
-    View view = null;
 
-    public ChatFragment() {
+    public MyOffersItemFragment() {
         // Required empty public constructor
     }
 
@@ -51,22 +53,31 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_chat, container, false);
+        final View view = inflater.inflate(R.layout.fragment_my_offers_item, container, false);
+
+        Button _removeButton = (Button) view.findViewById(R.id.btn_my_offers_item_remove);
+        _removeButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                removeOffer();
+            }
+        });
 
         String jsonMyObject = getArguments().getString("myObject");
 
         myObject = new Gson().fromJson(jsonMyObject, Item.class);
 
-        Button _sendButton = (Button) view.findViewById(R.id.btn_chat_send);
-        _sendButton.setOnClickListener(new View.OnClickListener() {
+        TextView text = (TextView) view.findViewById(R.id.txtDesc_my_offers);
+        text.setText(myObject.Description);
 
-            @Override
-            public void onClick(View v) {
-                sendMessage();
-            }
-        });
+        if(myObject.Image != null) {
+            byte[] bitmapdata = Base64.decode(myObject.Image, 0);
+            Bitmap bmp = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
 
-        _txtMessage = (EditText) view.findViewById(R.id.txt_chat_message);
+            ImageView imageView = (ImageView) view.findViewById(R.id.img_my_offers);
+            imageView.setImageBitmap(bmp);
+        }
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setIndeterminate(true);
@@ -92,7 +103,7 @@ public class ChatFragment extends Fragment {
                         }
 
                         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/ChatMessage/GetChatMessages");
+                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/offer/GetByItem");
 
                         post.addHeader("Content-type", "application/x-www-form-urlencoded");
                         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
@@ -135,16 +146,22 @@ public class ChatFragment extends Fragment {
 
                                 if(data.getInt("ResultNumber") == 1){
                                     String jsonMyObject = data.getString("Data");
-                                    final ChatMessage[] messages = new Gson().fromJson(jsonMyObject, ChatMessage[].class);
+                                    /*final Offer[] offers = new Gson().fromJson(jsonMyObject, Offer[].class);
 
-                                    ListView grid = (ListView) view.findViewById(R.id.listView_chat);
-                                    ChatAdapter adapter = new ChatAdapter(getActivity(), messages);
+                                    ListView grid = (ListView) view.findViewById(R.id.listView_offers);
+                                    ListAdapter adapter = new ListAdapter(getActivity(), offers);
                                     grid.setAdapter(adapter);
 
-
+                                    grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                            selectOffer(offers[position]);
+                                        }
+                                    });
+                                    */
                                 }
                                 else{
-                                    Toast.makeText(getActivity(), "Error! try again",
+                                    Toast.makeText(getActivity(), "Error! try again!",
                                             Toast.LENGTH_LONG).show();
                                 }
 
@@ -153,9 +170,7 @@ public class ChatFragment extends Fragment {
                                 Toast.makeText(getActivity(), "Unknown error occurred!",
                                         Toast.LENGTH_LONG).show();
                             }
-
                             progressDialog.dismiss();
-
                         }
                     });
 
@@ -173,12 +188,10 @@ public class ChatFragment extends Fragment {
         return view;
     }
 
-    public void sendMessage(){
-        final String message = _txtMessage.getText().toString();
-
+    public void removeOffer(){
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Collecting data...");
+        progressDialog.setMessage("Removing...");
         progressDialog.show();
 
         new Thread(new MyThread(
@@ -200,13 +213,12 @@ public class ChatFragment extends Fragment {
                         }
 
                         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/ChatMessage/SendChatMessage");
+                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/offer/RemoveOffer");
 
                         post.addHeader("Content-type", "application/x-www-form-urlencoded");
                         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
                         urlParameters.add(new BasicNameValuePair("Token", token));
-                        urlParameters.add(new BasicNameValuePair("ItemId", Integer.toString(myObject.ItemId)));
-                        urlParameters.add(new BasicNameValuePair("Message", message));
+                        urlParameters.add(new BasicNameValuePair("OfferId", Integer.toString(myObject.ItemId)));
 
                         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
@@ -243,15 +255,7 @@ public class ChatFragment extends Fragment {
                                 JSONObject data = (JSONObject) result.data;
 
                                 if(data.getInt("ResultNumber") == 1){
-
-                                    String jsonMyObject = data.getString("Data");
-                                    final ChatMessage[] messages = new Gson().fromJson(jsonMyObject, ChatMessage[].class);
-
-                                    ListView grid = (ListView) view.findViewById(R.id.listView_chat);
-                                    ChatAdapter adapter = new ChatAdapter(getActivity(), messages);
-                                    grid.setAdapter(adapter);
-
-
+                                    getFragmentManager().popBackStackImmediate();
                                 }
                                 else{
                                     Toast.makeText(getActivity(), "Error! try again!",
@@ -263,7 +267,6 @@ public class ChatFragment extends Fragment {
                                 Toast.makeText(getActivity(), "Unknown error occurred!",
                                         Toast.LENGTH_LONG).show();
                             }
-                            _txtMessage.setText("");
                             progressDialog.dismiss();
                         }
                     });

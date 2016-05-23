@@ -1,0 +1,19 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.saleup.MyOffersHistoryFragment">
+
+    <com.saleup.ExpandableHeightGridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/gridview_my_offers_history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnWidth="100dp"
+        android:numColumns="2"
+        android:verticalSpacing="60dp"
+        android:horizontalSpacing="60dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        />
+
+</FrameLayout>
