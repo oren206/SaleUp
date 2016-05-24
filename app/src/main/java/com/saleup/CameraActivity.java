@@ -226,7 +226,7 @@ public class CameraActivity extends AppCompatActivity {
             */
 
             ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOS);
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOS);
             byteArray = byteArrayOS.toByteArray();
         }
     }

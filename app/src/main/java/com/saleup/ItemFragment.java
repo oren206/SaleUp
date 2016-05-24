@@ -11,6 +11,7 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -45,7 +46,7 @@ public class ItemFragment extends Fragment {
     Item myObject = null;
 
     TextView _txtOffer = null;
-    GridView _gridView = null;
+    ExpandableHeightGridView _gridView = null;
 
     public ItemFragment() {
         // Required empty public constructor
@@ -76,7 +77,7 @@ public class ItemFragment extends Fragment {
 
         _txtOffer = (TextView) view.findViewById(R.id.txtMakeOffer);
 
-        _gridView = (GridView) view.findViewById(R.id.gridviewItem);
+        _gridView = (ExpandableHeightGridView) view.findViewById(R.id.gridviewItem);
 
         if(myObject.Image != null) {
             byte[] bitmapdata = Base64.decode(myObject.Image, 0);
@@ -157,10 +158,28 @@ public class ItemFragment extends Fragment {
 
                                     Adapter adapter = new Adapter(getActivity(), items);
                                     _gridView.setAdapter(adapter);
+                                    _gridView.setExpanded(true);
+
+                                    _gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                            ItemFragment fragment = new ItemFragment();
+                                            Bundle b = new Bundle();
+                                            b.putString("myObject", new Gson().toJson(items[position]));
+                                            fragment.setArguments(b);
+
+                                            android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                            fragmentManager.beginTransaction()
+                                                    .replace(R.id.fragment_container, fragment)
+                                                    .addToBackStack(null)
+                                                    .commit();
+                                        }
+                                    });
+
                                 }
                                 else{
-                                    Toast.makeText(getActivity(), "Error! try again!",
-                                            Toast.LENGTH_LONG).show();
+                                    /*Toast.makeText(getActivity(), "Error! try again!",
+                                            Toast.LENGTH_LONG).show();*/
                                 }
 
 

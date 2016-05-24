@@ -195,6 +195,16 @@ public class BaseActivity extends AppCompatActivity
                     .commit();
 
         }
+        else if (id == R.id.nav_hot_items) {
+            HotItemsFragment fragment = new HotItemsFragment();
+
+            android.support.v4.app.FragmentManager fragmentManager = BaseActivity.this.getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+
+        }
         else if(id == R.id.nav_profile) {
             MyProfileFragment fragment = new MyProfileFragment();
 
