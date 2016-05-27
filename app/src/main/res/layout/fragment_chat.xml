@@ -18,7 +18,9 @@
         android:id="@+id/txt_chat_message"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/btn_chat_send"
+        android:layout_toStartOf="@+id/btn_chat_send" />
 
 
     <Button
