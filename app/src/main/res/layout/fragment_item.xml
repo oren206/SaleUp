@@ -48,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Recommended"
+        android:text=" Recommended "
         android:id="@+id/textView13"
         android:textStyle="normal|italic"
         android:layout_below="@+id/btnMakeOffer"
