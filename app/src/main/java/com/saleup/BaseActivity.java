@@ -2,7 +2,9 @@ package com.saleup;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.app.Fragment;
@@ -15,10 +17,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -32,6 +33,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -42,6 +44,10 @@ public class BaseActivity extends AppCompatActivity
 
     Toolbar toolbar = null;
     NavigationView navigationView = null;
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    Bitmap imageBitmap = null;
+    byte[] byteArray = {1,2,3};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +75,12 @@ public class BaseActivity extends AppCompatActivity
             public void onClick(View view) {
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
-                Intent k = new Intent(BaseActivity.this, CameraActivity.class);
+                /*Intent k = new Intent(BaseActivity.this, CameraActivity.class);
                 startActivity(k);
                 finish();
+                */
+
+                takePhoto();
             }
         });
 
@@ -85,6 +94,7 @@ public class BaseActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         TextView textView = (TextView) findViewById(R.id.lblDisplayName);
+        TextView textView2 = (TextView) findViewById(R.id.lblDisplayEmail);
 
         String user = (String) Cache.GetInstance().Get(this, "UserData");
         try {
@@ -92,6 +102,7 @@ public class BaseActivity extends AppCompatActivity
             JSONObject finalResult = new JSONObject(tokener);
 
             textView.setText(finalResult.getString("UserName"));
+            textView2.setText(finalResult.getString("Email"));
 
         }
         catch (JSONException ex){
@@ -334,5 +345,50 @@ public class BaseActivity extends AppCompatActivity
 
                 }}
         )).start();
+    }
+
+    public void takePhoto(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+
+        /*Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,
+                "Select Picture"), REQUEST_IMAGE_CAPTURE);
+                */
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //ImageView _photoView = (ImageView) findViewById(R.id.img_preview);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            imageBitmap = (Bitmap) extras.get("data");
+
+            //_photoView.setImageBitmap(imageBitmap);
+
+            /*
+            int width = imageBitmap.getWidth();
+            int height = imageBitmap.getHeight();
+
+            int size = imageBitmap.getRowBytes() * imageBitmap.getHeight();
+            ByteBuffer byteBuffer = ByteBuffer.allocate(size);
+            imageBitmap.copyPixelsToBuffer(byteBuffer);
+            byteArray = byteBuffer.array();
+            */
+
+            ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOS);
+            byteArray = byteArrayOS.toByteArray();
+
+            Cache.GetInstance().Set(BaseActivity.this, "byteArray", byteArray);
+
+            Intent k = new Intent(BaseActivity.this, CameraActivity.class);
+            startActivity(k);
+            finish();
+        }
     }
 }

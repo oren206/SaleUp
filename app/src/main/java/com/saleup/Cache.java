@@ -45,4 +45,12 @@ public class Cache extends Activity {
 
         return obj;
     }
+
+    public void Remove(Activity a, String key){
+        SharedPreferences sharedPref = a.getSharedPreferences(PrefName, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.remove(key);
+        editor.apply();
+    }
 }
