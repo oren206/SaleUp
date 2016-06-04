@@ -46,7 +46,7 @@ public class ListAdapter extends BaseAdapter {
 
         textPrice.setText(Integer.toString(images[position].Price));
         textLocation.setText(Integer.toString(images[position].LocationId));
-        //textDate.setText(images[position].EndDate);
+        textDate.setText(images[position].EndDate);
 
         return convertView;
     }

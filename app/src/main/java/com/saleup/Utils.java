@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 
 class Result{
     boolean status;
@@ -60,4 +61,12 @@ public class Utils {
         return imageStr;
     }
 
+    public static byte[] toPremitiveByteArray(ArrayList<Double> in) {
+        final int n = in.size();
+        byte ret[] = new byte[n];
+        for (int i = 0; i < n; i++) {
+            ret[i] = in.get(i).byteValue();
+        }
+        return ret;
+    }
 }

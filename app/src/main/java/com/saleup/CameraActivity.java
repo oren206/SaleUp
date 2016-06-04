@@ -11,6 +11,7 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CameraActivity extends AppCompatActivity {
@@ -45,16 +47,6 @@ public class CameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        Button _photoButton = (Button) findViewById(R.id.button);
-
-        _photoButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                takePhoto();
-            }
-        });
-
         Button _submitButton = (Button) findViewById(R.id.btn_camera_submit);
 
         _submitButton.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +56,40 @@ public class CameraActivity extends AppCompatActivity {
                 submitItem();
             }
         });
+
+        final TextView _txtEndDateValue = (TextView) findViewById(R.id.txtEndDateValue);
+        SeekBar _seekBar = (SeekBar) findViewById(R.id.seekBar);
+
+        _seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+                _txtEndDateValue.setText(String.valueOf(seekBar.getProgress()));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
+                // TODO Auto-generated method stub
+
+                //_txtEndDateValue.setText(progress);
+                //t1.setTextSize(progress);
+                //Toast.makeText(getApplicationContext(), String.valueOf(progress),Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+        ArrayList<Double> o = (ArrayList<Double>)Cache.GetInstance().Get(CameraActivity.this, "byteArray");
+
+        byteArray = Utils.toPremitiveByteArray(o);
+        Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        ImageView _photoView = (ImageView) findViewById(R.id.img_preview);
+        _photoView.setImageBitmap(bmp);
 
     }
 
@@ -75,8 +101,10 @@ public class CameraActivity extends AppCompatActivity {
         TextView _locationText = (TextView) findViewById(R.id.txt_camera_locationt);
         final String location = _locationText.getText().toString();
 
-        TextView _endDateText = (TextView) findViewById(R.id.txt_camera_endDate);
-        final String endDate = _endDateText.getText().toString();
+        SeekBar _seekBar = (SeekBar) findViewById(R.id.seekBar);
+        int x = _seekBar.getProgress();
+        Date today = new Date();
+        final Date tomorrow = new Date(today.getTime() + (1000 * 60 * 60 * x));
 
         final ProgressDialog progressDialog = new ProgressDialog(CameraActivity.this);
         progressDialog.setIndeterminate(true);
@@ -109,8 +137,9 @@ public class CameraActivity extends AppCompatActivity {
                         urlParameters.add(new BasicNameValuePair("Token", token));
                         urlParameters.add(new BasicNameValuePair("Description", description));
                         urlParameters.add(new BasicNameValuePair("LocationId", location));
-                        urlParameters.add(new BasicNameValuePair("EndDate", endDate));
+                        urlParameters.add(new BasicNameValuePair("EndDate", tomorrow.toString()));
                         String imageString = "";
+                        //byteArray = (byte[])Cache.GetInstance().Get(CameraActivity.this, "byteArray");
                         if(byteArray != null) {
                             //imageString = Base64.encodeToString(byteArray, 0);
                             imageString = Base64.encodeToString(byteArray, Base64.DEFAULT);
@@ -191,44 +220,6 @@ public class CameraActivity extends AppCompatActivity {
         )).start();
     }
 
-    public void takePhoto(){
-        firstTaken = true;
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
-
-        /*Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,
-                "Select Picture"), REQUEST_IMAGE_CAPTURE);
-                */
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        ImageView _photoView = (ImageView) findViewById(R.id.img_preview);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            imageBitmap = (Bitmap) extras.get("data");
-
-            _photoView.setImageBitmap(imageBitmap);
-
-            /*
-            int width = imageBitmap.getWidth();
-            int height = imageBitmap.getHeight();
-
-            int size = imageBitmap.getRowBytes() * imageBitmap.getHeight();
-            ByteBuffer byteBuffer = ByteBuffer.allocate(size);
-            imageBitmap.copyPixelsToBuffer(byteBuffer);
-            byteArray = byteBuffer.array();
-            */
-
-            ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOS);
-            byteArray = byteArrayOS.toByteArray();
-        }
-    }
+    
 
 }
