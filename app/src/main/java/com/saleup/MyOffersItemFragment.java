@@ -255,6 +255,9 @@ public class MyOffersItemFragment extends Fragment {
                                 JSONObject data = (JSONObject) result.data;
 
                                 if(data.getInt("ResultNumber") == 1){
+                                    Toast.makeText(getActivity(), "Offer removed successfully",
+                                            Toast.LENGTH_LONG).show();
+
                                     getFragmentManager().popBackStackImmediate();
                                 }
                                 else{
