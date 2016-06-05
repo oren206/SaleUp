@@ -69,4 +69,15 @@ public class Utils {
         }
         return ret;
     }
+
+    public static Item[] appendArray(Item[] array, Item x){
+        Item[] result = new Item[array.length + 1];
+
+        for(int i = 0; i < array.length; i++)
+            result[i] = array[i];
+
+        result[result.length - 1] = x;
+
+        return result;
+    }
 }

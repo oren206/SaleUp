@@ -44,6 +44,8 @@ public class HomeFragment extends Fragment {
     View view = null;
     int lastId = Integer.MAX_VALUE;
 
+    Item[] items = null;
+
     public HomeFragment() {
         // Required empty public constructor
 
@@ -158,9 +160,18 @@ public class HomeFragment extends Fragment {
 
                                 if(data.getInt("ResultNumber") == 1){
                                     String jsonMyObject = data.getString("Data");
-                                    final Item[] items = new Gson().fromJson(jsonMyObject, Item[].class);
+                                    final Item[] newItems = new Gson().fromJson(jsonMyObject, Item[].class);
 
-                                    lastId = items[items.length - 1].ItemId;
+                                    if(items == null) {
+                                        items = newItems;
+                                    }
+                                    else {
+                                        for (int i = 0; i < newItems.length; i++) {
+                                            items = Utils.appendArray(items, newItems[i]);
+                                        }
+                                    }
+
+                                    lastId = newItems[newItems.length - 1].ItemId;
 
                                     ExpandableHeightGridView grid = (ExpandableHeightGridView) view.findViewById(R.id.gridview);
                                     Adapter adapter = new Adapter(getActivity(), items);

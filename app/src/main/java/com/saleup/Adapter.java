@@ -24,10 +24,12 @@ public class Adapter extends BaseAdapter {
     }
 
     Context c;
-    static Item[] images;
+    Item[] images;
 
     public Adapter(Context c, Item[] images){
         this.c = c;
+        this.images = images;
+        /*
         if(this.images == null) {
             this.images = images;
         }
@@ -36,19 +38,10 @@ public class Adapter extends BaseAdapter {
                 this.images = appendArray(this.images, images[i]);
             }
         }
-
+        */
     }
 
-    private Item[] appendArray(Item[] array, Item x){
-        Item[] result = new Item[array.length + 1];
 
-        for(int i = 0; i < array.length; i++)
-            result[i] = array[i];
-
-        result[result.length - 1] = x;
-
-        return result;
-    }
 
     @Override
     public int getCount() {
