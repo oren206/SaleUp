@@ -24,12 +24,30 @@ public class Adapter extends BaseAdapter {
     }
 
     Context c;
-    Item[] images;
+    static Item[] images;
 
     public Adapter(Context c, Item[] images){
         this.c = c;
-        this.images = images;
+        if(this.images == null) {
+            this.images = images;
+        }
+        else {
+            for (int i = 0; i < images.length; i++) {
+                this.images = appendArray(this.images, images[i]);
+            }
+        }
 
+    }
+
+    private Item[] appendArray(Item[] array, Item x){
+        Item[] result = new Item[array.length + 1];
+
+        for(int i = 0; i < array.length; i++)
+            result[i] = array[i];
+
+        result[result.length - 1] = x;
+
+        return result;
     }
 
     @Override

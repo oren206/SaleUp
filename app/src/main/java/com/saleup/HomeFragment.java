@@ -6,10 +6,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +41,8 @@ import java.util.List;
  */
 public class HomeFragment extends Fragment {
 
+    View view = null;
+    int lastId = Integer.MAX_VALUE;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -53,7 +57,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        final View view = inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
 
         /*TextView textView = (TextView) view.findViewById(R.id.lblName);
 
@@ -71,6 +75,23 @@ public class HomeFragment extends Fragment {
         }
 */
 
+        Button _loadMoreButton = (Button) view.findViewById(R.id.btnLoadMore);
+        _loadMoreButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                load();
+            }
+        });
+
+
+        load();
+
+
+        return view;
+    }
+
+    private void load(){
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Collecting data...");
@@ -95,11 +116,12 @@ public class HomeFragment extends Fragment {
                         }
 
                         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/Item/GetItems");
+                        HttpPost post = new HttpPost("http://saleup.azurewebsites.net/api/Item/GetItemsByPage");
 
                         post.addHeader("Content-type", "application/x-www-form-urlencoded");
                         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
                         urlParameters.add(new BasicNameValuePair("Token", token));
+                        urlParameters.add(new BasicNameValuePair("Page", Integer.toString(lastId)));
 
                         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
@@ -138,6 +160,8 @@ public class HomeFragment extends Fragment {
                                     String jsonMyObject = data.getString("Data");
                                     final Item[] items = new Gson().fromJson(jsonMyObject, Item[].class);
 
+                                    lastId = items[items.length - 1].ItemId;
+
                                     ExpandableHeightGridView grid = (ExpandableHeightGridView) view.findViewById(R.id.gridview);
                                     Adapter adapter = new Adapter(getActivity(), items);
                                     grid.setAdapter(adapter);
@@ -151,7 +175,7 @@ public class HomeFragment extends Fragment {
                                             b.putString("myObject", new Gson().toJson(items[position]));
                                             fragment.setArguments(b);
 
-                                            android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                                             fragmentManager.beginTransaction()
                                                     .replace(R.id.fragment_container, fragment)
                                                     .addToBackStack(null)
@@ -187,10 +211,6 @@ public class HomeFragment extends Fragment {
 
                 }}
         )).start();
-
-
-
-        return view;
     }
 
 }
