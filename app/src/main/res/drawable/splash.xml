@@ -4,12 +4,13 @@
         android:drawable="@color/background_floating_material_light"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>
-
     <item>
+
         <bitmap
-            android:gravity="fill"
-            android:src="@mipmap/ic_launcher"
+            android:scaleType="centerInside"
+            android:gravity="center"
+            android:src="@mipmap/logofinal"
+
             />
-        />
     </item>
 </layer-list>

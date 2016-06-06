@@ -33,6 +33,7 @@
         android:layout_alignStart="@+id/img_item"
         android:inputType="phone"
         android:maxLength="6"
+
         android:gravity="center"
         />
 
