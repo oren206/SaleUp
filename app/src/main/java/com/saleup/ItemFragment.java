@@ -44,6 +44,7 @@ import java.util.List;
 public class ItemFragment extends Fragment {
 
     Item myObject = null;
+    int locationId = 0;
 
     TextView _txtOffer = null;
     ExpandableHeightGridView _gridView = null;
@@ -71,6 +72,17 @@ public class ItemFragment extends Fragment {
         String jsonMyObject = getArguments().getString("myObject");
 
         myObject = new Gson().fromJson(jsonMyObject, Item.class);
+
+        String user = (String) Cache.GetInstance().Get(getActivity(), "UserData");
+        try {
+            JSONTokener tokener = new JSONTokener(user);
+            JSONObject finalResult = new JSONObject(tokener);
+
+            locationId = Integer.parseInt(finalResult.getString("LocationId"));
+
+        } catch (JSONException ex){
+
+        }
 
         TextView text = (TextView) view.findViewById(R.id.txtDesc_item);
         text.setText(myObject.Description);
@@ -240,6 +252,7 @@ public class ItemFragment extends Fragment {
                         urlParameters.add(new BasicNameValuePair("Token", token));
                         urlParameters.add(new BasicNameValuePair("ItemId", Integer.toString(myObject.ItemId)));
                         urlParameters.add(new BasicNameValuePair("Amount", offer));
+                        urlParameters.add(new BasicNameValuePair("LocationId", Integer.toString(locationId)));
 
                         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 

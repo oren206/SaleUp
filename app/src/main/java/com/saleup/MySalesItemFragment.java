@@ -191,7 +191,7 @@ public class MySalesItemFragment extends Fragment {
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Removing...");
+        progressDialog.setMessage("Selecting offer...");
         progressDialog.show();
 
         new Thread(new MyThread(

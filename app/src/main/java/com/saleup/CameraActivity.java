@@ -4,14 +4,15 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,10 +28,8 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -91,6 +90,10 @@ public class CameraActivity extends AppCompatActivity {
         ImageView _photoView = (ImageView) findViewById(R.id.img_preview);
         _photoView.setImageBitmap(bmp);
 
+        Spinner dropdown = (Spinner)findViewById(R.id.spinner1_profile_location);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, Utils.Cities);
+        dropdown.setAdapter(adapter);
+
     }
 
     public void submitItem(){
@@ -98,8 +101,10 @@ public class CameraActivity extends AppCompatActivity {
         TextView _descriptionText = (TextView) findViewById(R.id.txt_desc);
         final String description = _descriptionText.getText().toString();
 
-        TextView _locationText = (TextView) findViewById(R.id.txt_camera_locationt);
-        final String location = _locationText.getText().toString();
+        //TextView _locationText = (TextView) findViewById(R.id.txt_camera_locationt);
+
+        Spinner dropdown = (Spinner) findViewById(R.id.spinner1_profile_location);
+        final String location = Utils.CitiesId[dropdown.getSelectedItemPosition()];//_locationText.getText().toString();
 
         SeekBar _seekBar = (SeekBar) findViewById(R.id.seekBar);
         int x = _seekBar.getProgress();

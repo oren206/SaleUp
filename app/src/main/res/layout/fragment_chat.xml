@@ -6,7 +6,7 @@
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="450dp"
+        android:layout_height="350dp"
         android:id="@+id/listView_chat"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -16,11 +16,9 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:id="@+id/txt_chat_message"
+        android:layout_below="@+id/listView_chat"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/btn_chat_send"
-        android:layout_toStartOf="@+id/btn_chat_send" />
+        android:layout_alignParentStart="true" />
 
 
     <Button
@@ -28,7 +26,7 @@
         android:layout_height="wrap_content"
         android:text="Send"
         android:id="@+id/btn_chat_send"
-        android:layout_alignParentBottom="true"
+        android:layout_alignTop="@+id/txt_chat_message"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 

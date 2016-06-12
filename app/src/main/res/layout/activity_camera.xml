@@ -15,7 +15,8 @@
         android:id="@+id/img_preview"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/seekBar" />
 
     <EditText
         android:layout_width="match_parent"
@@ -50,24 +51,29 @@
         android:layout_above="@+id/txt_desc"
         android:layout_centerHorizontal="true" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txt_camera_locationt"
-        android:layout_above="@+id/textView11"
-        android:layout_centerHorizontal="true" />
-
     <SeekBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/seekBar"
         android:max="30"
-        android:layout_above="@+id/txt_camera_locationt"
+        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="21dp"
         android:layout_toLeftOf="@+id/txtEndDateValue"
         android:layout_toStartOf="@+id/txtEndDateValue" />
+
+    <Spinner
+        android:id="@+id/spinner1_profile_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
+        android:layout_above="@+id/textView11"
+        android:layout_alignRight="@+id/txtEndDateValue"
+        android:layout_alignEnd="@+id/txtEndDateValue"
+        android:gravity="center"
+        android:textAlignment="center"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -85,7 +91,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Num of days"
         android:id="@+id/textView12"
-        android:layout_above="@+id/txt_camera_locationt"
+        android:layout_below="@+id/seekBar"
         android:layout_alignLeft="@+id/textView3"
         android:layout_alignStart="@+id/textView3" />
 
