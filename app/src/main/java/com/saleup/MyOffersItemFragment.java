@@ -55,6 +55,7 @@ public class MyOffersItemFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_my_offers_item, container, false);
 
+        /* remove button in offer page
         Button _removeButton = (Button) view.findViewById(R.id.btn_my_offers_item_remove);
         _removeButton.setOnClickListener(new View.OnClickListener() {
 
@@ -63,7 +64,7 @@ public class MyOffersItemFragment extends Fragment {
                 removeOffer();
             }
         });
-
+*/
         String jsonMyObject = getArguments().getString("myObject");
 
         myObject = new Gson().fromJson(jsonMyObject, Item.class);
